@@ -26,13 +26,26 @@
 (define rest-at-list cdr)    ; Obtiene el resto de la lista sin el primer elemento
 
 ;función auxilar para board-can-play?
-;Descripción: ve si hay una posición disponible en la primera fila, si se encuentra con 1, no puede jugar y retorna f, si hay 0 puede jugar
+;Descripción: ve si hay una posición disponible en la primera fila, si se encuentra llena de 1, no puede jugar y retorna f, si hay 0's puede jugar
 ;Dominio: board (tablero)
 ;Recorrido: boolean (#t posición disponible, #f posición no disponible)
 (define (empty-at-top? board)
   (if (member 0 (first-at-list board))
       #t
       #f))
+;funcion auxiliar para board-can-play?
+;Descripción: Obtiene los valores de una columna (sirve para leer los 0 o 1 de la columna)
+;Dominio: board (tablero) X number (column-position (que corresponde al índice de columna 0-6))
+;Recorrido: list (lista con los valores de la columna)
+;Recursión: Recursión natural
+(define (get-column board column-position)
+  (if (null? board)
+      '()
+      (cons (list-ref (first-at-list board) column-position)(get-column (rest-at-list board) column-position))))
+
+;me falta la logica para que cuando se presente un 0 bajo un 1, retornar falso, ya que ese caso no se dará en el juego 
+
+
 
 ;Descripción: Verifica si se puede realizar una jugada en el tablero
 ;Dominio: board (tablero)
