@@ -1,4 +1,6 @@
 #lang racket
+(provide (all-defined-out))
+
 
 ;Descripcion: Crear una lista llamada piece a partir del color
 ;Dominio: color (string)

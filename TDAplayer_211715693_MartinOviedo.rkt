@@ -1,4 +1,5 @@
 #lang racket
+(provide (all-defined-out))
 
 ;descripcion: Crear una lista llamada Player a partir del Id, name, color, wins, losses, draws, remaining-pieces.
 ;Dominio: id (int) X name (string) X color (string) X wins (int) X losses (int) X draws (int) X remaining-pieces (int)

@@ -1,5 +1,11 @@
 #lang racket
 
+(provide (all-defined-out))
+
+(require "TDApiece_211715693_MartinOviedo.rkt")
+(require "TDAplayer_211715693_MartinOviedo.rkt")
+
+
 ;Descripcion: Crear una lista para representar el tablero, la lista está compuesta de 6 sublistas (filas) en donde cada una tiene 7 elementos que serían las columnas
 ;Los 0 van a representar que está vacia la posición
 ;Los 1 van a representar que está ocupada la posición
@@ -43,15 +49,35 @@
       '()
       (cons (list-ref (first-at-list board) column-position)(get-column (rest-at-list board) column-position))))
 
-;me falta la logica para que cuando se presente un 0 bajo un 1, retornar falso, ya que ese caso no se dará en el juego 
+;función auxiliar para board-can-play?
+;Descripción: Verifica que una columna cumpla con las reglas del juego
+;Dominio: list (lista de valores de una columna)
+;Recorrido: boolean (#t cumple, #f no cumple)
+(define (valid-column column)
+  (cond
+    [(null? (rest-at-list column)) #t]  ; es valido
+    [(and (= (first-at-list (rest-at-list column)) 0) 
+          (or (= (first-at-list column) 1)))
+     #f]  ; 1 encima de 0 no es válido
+    [else (valid-column (rest-at-list column))]))  ; Sigue verificando el resto
 
+
+;Descripción: Verifica si todas las columnas son válidas
+;Dominio: board X number (índice inicial 0)
+;Recorrido: boolean (#t si todas son válidas, #f si no)
+(define (check-all-columns board column-position)
+  (if (= column-position 7)  ; ya se revisaron todas las columna
+      #t
+      (and (valid-column (get-column board column-position))
+           (check-all-columns board (+ column-position 1)))))
 
 
 ;Descripción: Verifica si se puede realizar una jugada en el tablero
 ;Dominio: board (tablero)
 ;Recorrido: boolean (#t si se puede jugar, #f si no se puede jugar)
 (define (board-can-play? board)
-  (empty-at-top? board))
+  (and (check-all-columns board 0)
+       (empty-at-top? board)))
 
 
 
