@@ -55,10 +55,10 @@
 ;Recorrido: boolean (#t cumple, #f no cumple)
 (define (valid-column column)
   (cond
-    [(null? (rest-at-list column)) #t]  ; es valido
-    [(and (= (first-at-list (rest-at-list column)) 0) 
-          (or (= (first-at-list column) 1)))
-     #f]  ; 1 encima de 0 no es válido
+    [(null? (rest-at-list column)) #t]  ; es valido(casobase)
+    [(and (equal? (first-at-list (rest-at-list column)) 0) 
+          (not (equal? (first-at-list column) 0)))
+     #f]  ; valor no-0 encima de 0 no es válido
     [else (valid-column (rest-at-list column))]))  ; Sigue verificando el resto
 
 
@@ -100,41 +100,43 @@
   (define (aux column column-position)
     (if (negative? column-position)
         #f ; si no encuentra 0
-        (if (= (list-ref column column-position) 0)
+        (if (equal? (list-ref column column-position) 0)
             column-position ; encuentra cero, devuelve posición
             (aux column (- column-position 1))))) ; continúa la búsqueda
-  (aux column (- 5 1))) ; comienza desde la última posición (5) para un tablero de 6 filas
+  (aux column (- 6 1))) ; comienza desde la última posición (5) para un tablero de 6 filas
 
+;actualizar la fila
+(define (update-row current-row column-position piece)
+  (cond
+    [(= column-position 0) (cons (first-at-list piece) (rest-at-list current-row))]  ; Aquí usamos first-at-list en vez de piece-get-color
+    [else (cons (first-at-list current-row)
+                (update-row (rest-at-list current-row) (- column-position 1) piece))]))
 
-;(define (board-set-play-piece board column piece)
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-       
-       
-       
-     
+;Descripción: Actualiza el tablero con la nueva fila en la posición especificada.
+;Dominio: board (tablero) X number (column-position) X list (nueva fila)
+;Recorrido: board (nuevo tablero actualizado)
+(define (update-board board column-position new-row)
+  (if (= column-position 0)
+      (cons new-row (rest-at-list board)) ; Reemplaza la primera fila
+      (cons (first-at-list board) 
+            (update-board (rest-at-list board) (- column-position 1) new-row)))) ; Reemplaza la fila correspondiente
 
 
 
 
-
-
-
-
-
- 
-  
-
-
+;Descripción: coloca la ficha en la posición más baja disponible de la columna seleccionada.
+;Dominio: board (tablero) X number (column) X piece
+;Recorrido: board (tablero actualizado con la nueva ficha)
+(define (board-set-play-piece board column piece)
+  (update-board board 
+   (find-zero (get-column2 board column))
+   (update-row 
+    (cond 
+      [(= (find-zero (get-column2 board column)) 0) (first-at-list board)]
+      [(= (find-zero (get-column2 board column)) 1) (second-at-list board)]
+      [(= (find-zero (get-column2 board column)) 2) (third-at-list board)]
+      [(= (find-zero (get-column2 board column)) 3) (fourth-at-list board)]
+      [(= (find-zero (get-column2 board column)) 4) (fifth-at-list board)]
+      [(= (find-zero (get-column2 board column)) 5) (sixth-at-list board)])
+    column 
+    piece)))
