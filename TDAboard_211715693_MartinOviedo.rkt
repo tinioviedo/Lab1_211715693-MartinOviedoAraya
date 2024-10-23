@@ -79,6 +79,40 @@
   (and (check-all-columns board 0)
        (empty-at-top? board)))
 
+;--- RF06
+;Función auxiliar mymap
+(define mymap (lambda (f l)
+                ;caso base
+                (if (null? l)
+                    '()
+                    (cons (f (first-at-list l)) (mymap f (rest-at-list l ))))))
+
+;Otra manera de obtener columnas de una manera no recursiva
+(define (get-column2 board column-position)
+  (mymap (lambda (row) (list-ref row column-position)) board))
+
+
+;Encontrar el cero más bajo en la columna
+;Descripción: Busca el 0 más bajo de la columna
+;Dominio: column
+;Recorrido: da la posición del 0 más bajo de la columna
+(define (find-zero column)
+  (define (aux column column-position)
+    (if (negative? column-position)
+        #f ; si no encuentra 0
+        (if (= (list-ref column column-position) 0)
+            column-position ; encuentra cero, devuelve posición
+            (aux column (- column-position 1))))) ; continúa la búsqueda
+  (aux column (- 5 1))) ; comienza desde la última posición (5) para un tablero de 6 filas
+
+
+;(define (board-set-play-piece board column piece)
+  
+
+
+
+
+
 
 
 
