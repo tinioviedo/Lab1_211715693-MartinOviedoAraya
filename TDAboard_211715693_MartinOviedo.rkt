@@ -59,7 +59,8 @@
     [(and (equal? (first-at-list (rest-at-list column)) 0) 
           (not (equal? (first-at-list column) 0)))
      #f]  ; valor no-0 encima de 0 no es válido
-    [else (valid-column (rest-at-list column))]))  ; Sigue verificando el resto
+    [else
+     (valid-column (rest-at-list column))]))  ; Sigue verificando el resto
 
 
 ;Descripción: Verifica si todas las columnas son válidas
@@ -109,7 +110,8 @@
 (define (update-row current-row column-position piece)
   (cond
     [(= column-position 0) (cons (first-at-list piece) (rest-at-list current-row))]  ; Aquí usamos first-at-list en vez de piece-get-color
-    [else (cons (first-at-list current-row)
+    [else
+     (cons (first-at-list current-row)
                 (update-row (rest-at-list current-row) (- column-position 1) piece))]))
 
 ;Descripción: Actualiza el tablero con la nueva fila en la posición especificada.
@@ -140,3 +142,23 @@
       [(= (find-zero (get-column2 board column)) 5) (sixth-at-list board)])
     column 
     piece)))
+;Descripción: TDA BOAR-OTROS-VICTORIA VERTICAL; tengo que ordenar esto
+
+;Descripción: Verifica si hay 4 fichas consecutivas del mismo color en una columna
+;Dominio: list (columna)
+;Recorrido: number (0 si no hay ganador, 1 si gana rojo, 2 si gana amarillo)
+(define (column-check-vertical column)
+  (cond
+    [(< (length column) 4) 0]  ; si mientras va avanzando , se encuentra que el largo de la columna es menor a 4, ya no puede haber ganador, es empate en la columna
+    [(and (not (equal? (first-at-list column) 0))  ;not equal asegura que el primer elemento de la columna no sea 0
+          (equal? (first-at-list column) (second-at-list column))  ;1ra y 2da iguales
+          (equal? (second-at-list column) (third-at-list column))  ;2da y tra iguales
+          (equal? (third-at-list column) (fourth-at-list column))) ;3ra y 4ta iguales, se cumple las 4 seguidas
+     (if (equal? (first-at-list column) "r") 1 2)]  ; con lo de arriba me aseguro que hay un ganador , con esto veo quien ganó: 1 para rojo, 2 para amariillo
+    [else
+     (column-check-vertical (rest-at-list column))])) ;si en los primeros 4 no encontró , revisa los sgtes elementos
+
+; Descripción: Verifica todas las columnas del tablero buscando una victoria vertical
+; Dominio: board
+; Recorrido: number (0 si no hay ganador, 1 si gana rojo, 2 si gana amarillo)
+;(define (board-check-vertical-win board)
