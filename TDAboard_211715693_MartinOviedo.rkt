@@ -172,5 +172,32 @@
            (check-all-columns (+ column-position 1)))]))  ; Revisa la sgte columna
   
   (check-all-columns 0))
+;-rf8
+;Descripción: Verifica si hay 4 fichas consecutivas del mismo color en una fila
+;Dominio: list (fila)
+;Recorrido: number (0 si no hay ganador, 1 si gana rojo, 2 si gana amarillo)
+(define (row-check-horizontal row)
+  (cond
+    [(< (length row) 4) 0]  ; si el largo de la fila es menor a 4, no puede haber ganador
+    [(and (not (equal? (first-at-list row) 0))  ; not equal? asegura que el primer elemento de la columna no sea 0
+          (equal? (first-at-list row) (second-at-list row))  
+          (equal? (second-at-list row) (third-at-list row))  
+          (equal? (third-at-list row) (fourth-at-list row))) 
+     (if (equal? (first-at-list row) "r") 1 2)]  ; 1 para rojo, 2 para amarillo
+    [else
+     (row-check-horizontal (rest-at-list row))]))  ; revisa el siguiente grupo de 4
+
+;Descripción: Verifica todas las filas del tablero buscando una victoria horizontal
+;Dominio: board
+;Recorrido: number (0 si no hay ganador, 1 si gana rojo, 2 si gana amarillo)
+(define (board-check-horizontal-win board)
+  (cond
+    [(null? board) 0]  ; revisaron todas las filas y nadie ganó
+    [else 
+     (define row-winner (row-check-horizontal (first-at-list board)))
+     (if (> row-winner 0)
+         row-winner  ; ganador
+         (board-check-horizontal-win (rest-at-list board)))]))  ; revisa la siguiente fila
+
 
 

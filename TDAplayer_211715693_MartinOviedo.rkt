@@ -23,6 +23,8 @@
       (list id name color wins losses draws remaining-pieces)
       (error "Formato invalido de parametro(s) de player")))
 
+ 
+
 
  
 
