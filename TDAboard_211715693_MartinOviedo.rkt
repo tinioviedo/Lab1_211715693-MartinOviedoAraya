@@ -158,7 +158,19 @@
     [else
      (column-check-vertical (rest-at-list column))])) ;si en los primeros 4 no encontró , revisa los sgtes elementos
 
-; Descripción: Verifica todas las columnas del tablero buscando una victoria vertical
-; Dominio: board
-; Recorrido: number (0 si no hay ganador, 1 si gana rojo, 2 si gana amarillo)
-;(define (board-check-vertical-win board)
+;Descripción: Verifica todas las columnas del tablero buscando una victoria vertical
+;Dominio: board
+;Recorrido: number (0 si no hay ganador, 1 si gana rojo, 2 si gana amarillo)
+(define (board-check-vertical-win board)
+  (define (check-all-columns column-position)
+    (cond
+      [(= column-position 7) 0]  ; revisaron todas las columnas y nadie ganó
+      [else 
+       (define column-winner (column-check-vertical (get-column2 board column-position))) 
+       (if (> column-winner 0) 
+           column-winner  ; ganador
+           (check-all-columns (+ column-position 1)))]))  ; Revisa la sgte columna
+  
+  (check-all-columns 0))
+
+
