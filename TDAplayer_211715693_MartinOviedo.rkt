@@ -10,7 +10,8 @@
 (define ( player id name color wins losses draws remaining-pieces)
   (if (and (integer? id) ;se realizan validaciones de parametros
            (string? name)
-           (string? color)
+           (or (equal? color "red")   
+               (equal? color "yellow"))
            (and (integer? wins)
                 (>= wins 0))
            (and (integer? losses)
@@ -22,7 +23,6 @@
                 (>= remaining-pieces 4)))  ;se debe tener minimo 4 fichas para jugar
       (list id name color wins losses draws remaining-pieces)
       (error "Formato invalido de parametro(s) de player")))
-
  
 
 

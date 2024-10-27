@@ -6,10 +6,11 @@
 ;Dominio: color (string)
 ;Recorrido : piece
 ;Constructor
-(define (piece color) 
-  (if (string? color) ;se realiza una validación del parametro color, este debe ser un string
-  (list color)(error "Formato invalido de parametro de piece, ingrese un string"))) 
-
+(define (piece color)
+  (if (or (equal? color "red")          
+          (equal? color "yellow"))
+      (list color)
+      (error "Formato inválido de parámetro de piece, por favor ingrese 'red' o 'yellow'")))
   
 
 

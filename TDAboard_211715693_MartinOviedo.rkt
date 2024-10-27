@@ -39,15 +39,25 @@
   (if (member 0 (first-at-list board))
       #t
       #f))
-;funcion auxiliar para board-can-play?
-;Descripción: Obtiene los valores de una columna (sirve para leer los 0 o 1 de la columna)
-;Dominio: board (tablero) X number (column-position (que corresponde al índice de columna 0-6))
-;Recorrido: list (lista con los valores de la columna)
-;Recursión: Recursión natural
+;;función auxilar para board-can-play?
+;Descripción: Obtiene el elemento en una posición específica de una fila
+;Dominio: row position
+;Recorrido: el elemento en la posición especifica
+(define (get-element-at-position row position)
+  (cond
+    [(= position 0)(first-at-list row)]
+    [else
+     (get-element-at-position (rest-at-list row)(- position 1))]))
+;;función auxilar para board-can-play?
+;Descripción: Obtiene los elementos de una columna específica del tablero.
+;Dominio: board column-position
+;Recorrido: lista con los elementos de la columna especificada
+
 (define (get-column board column-position)
   (if (null? board)
       '()
-      (cons (list-ref (first-at-list board) column-position)(get-column (rest-at-list board) column-position))))
+      (cons (get-element-at-position (first-at-list board) column-position)
+            (get-column (rest-at-list board) column-position))))
 
 ;función auxiliar para board-can-play?
 ;Descripción: Verifica que una columna cumpla con las reglas del juego
@@ -92,18 +102,25 @@
 (define (get-column2 board column-position)
   (mymap (lambda (row) (list-ref row column-position)) board))
 
-
 ;Encontrar el cero más bajo en la columna
 ;Descripción: Busca el 0 más bajo de la columna
 ;Dominio: column
 ;Recorrido: da la posición del 0 más bajo de la columna
 (define (find-zero column)
-  (define (aux column column-position)
+  ; Función auxiliar para obtener elemento en una posición específica
+  (define (get-element-at-position col pos)
+    (cond
+      [(= pos 0) (first-at-list col)]
+      [else (get-element-at-position (rest-at-list col) (- pos 1))]))
+  
+;función auxiliar que busca el 0 más bajo
+(define (aux column column-position)
     (if (negative? column-position)
         #f ; si no encuentra 0
-        (if (equal? (list-ref column column-position) 0)
+        (if (equal? (get-element-at-position column column-position) 0)
             column-position ; encuentra cero, devuelve posición
             (aux column (- column-position 1))))) ; continúa la búsqueda
+  
   (aux column (- 6 1))) ; comienza desde la última posición (5) para un tablero de 6 filas
 
 ;actualizar la fila
@@ -143,13 +160,18 @@
     column 
     piece)))
 ;Descripción: TDA BOAR-OTROS-VICTORIA VERTICAL; tengo que ordenar esto
+;;función auxiliar mylength
+(define (mylength lst)
+  (if (null? lst)
+      0
+      (+ 1 (mylength (rest-at-list lst)))))
 
 ;Descripción: Verifica si hay 4 fichas consecutivas del mismo color en una columna
 ;Dominio: list (columna)
 ;Recorrido: number (0 si no hay ganador, 1 si gana rojo, 2 si gana amarillo)
 (define (column-check-vertical column)
   (cond
-    [(< (length column) 4) 0]  ; si mientras va avanzando , se encuentra que el largo de la columna es menor a 4, ya no puede haber ganador, es empate en la columna
+    [(< (mylength column) 4) 0]  ; si mientras va avanzando , se encuentra que el largo de la columna es menor a 4, ya no puede haber ganador, es empate en la columna
     [(and (not (equal? (first-at-list column) 0))  ;not equal asegura que el primer elemento de la columna no sea 0
           (equal? (first-at-list column) (second-at-list column))  ;1ra y 2da iguales
           (equal? (second-at-list column) (third-at-list column))  ;2da y tra iguales
@@ -178,7 +200,7 @@
 ;Recorrido: number (0 si no hay ganador, 1 si gana rojo, 2 si gana amarillo)
 (define (row-check-horizontal row)
   (cond
-    [(< (length row) 4) 0]  ; si el largo de la fila es menor a 4, no puede haber ganador
+    [(< (mylength row) 4) 0]  ; si el largo de la fila es menor a 4, no puede haber ganador
     [(and (not (equal? (first-at-list row) 0))  ; not equal? asegura que el primer elemento de la columna no sea 0
           (equal? (first-at-list row) (second-at-list row))  
           (equal? (second-at-list row) (third-at-list row))  
@@ -198,6 +220,67 @@
      (if (> row-winner 0)
          row-winner  ; ganador
          (board-check-horizontal-win (rest-at-list board)))]))  ; revisa la siguiente fila
+
+;rf9-otros
+
+;Descripción: get element en simples palabras es si se quiere un elemento en la fila 4 y columna 3 la función obtienendo la columna 3 en su totalidad y luego avanza( se va hacia abajo) 4 posiciones para obtener el elemento con first-at-list
+;Función para obtener un elemento en específico usando get-column2, tomando como dominio la fila y columna
+(define (get-element board row col)
+  (first-at-list (list-tail (get-column2 board col) row))) ;el uso de list-tail es para ir avanzando "row" (numero de filas) veces la columa , luego con first-at-list obtenemos el primer elemento de esa lista 
+;Verificar si cuatro elementos son iguales y distintos de 0
+(define (check-four-equal? e1 e2 e3 e4)
+  (and (not (equal? e1 0))
+       (equal? e1 e2)
+       (equal? e2 e3)
+       (equal? e3 e4)))
+
+
+; Verificar diagonal descendente desde una posición
+(define (check-position-descendent board row col)
+  (cond
+    [(and (<= (+ row 3) 5) (<= (+ col 3) 6))
+     (if (check-four-equal?
+          (get-element board row col)
+          (get-element board (+ row 1) (+ col 1))
+          (get-element board (+ row 2) (+ col 2))
+          (get-element board (+ row 3) (+ col 3)))
+         (if (equal? (get-element board row col) "red") 1 2)
+         0)]
+    [else
+     0]))
+
+; Verificar diagonal ascendente desde una posición
+(define (check-position-ascending board row col)
+  (cond
+    [(and (>= (- row 3) 0) (<= (+ col 3) 6))
+     (if (check-four-equal?
+          (get-element board row col)
+          (get-element board (- row 1) (+ col 1))
+          (get-element board (- row 2) (+ col 2))
+          (get-element board (- row 3) (+ col 3)))
+         (if (equal? (get-element board row col) "red") 1 2)
+         0)]
+    [else
+     0]))
+
+;Descripción: La función debe verificar si hay 4 fichas consecutivas del mismo color en cualquier diagonal (ascendente o descendente).
+;Dominio: board
+;Recorrido: int (1 si gana jugador 1 (rojo) , 2 si gana jugador 2, 0 si no hay ganador vertical)
+(define (board-check-diagonal-win board)
+  (define (check-diagonal board row col)
+    (cond
+      [(>= col 7) 0]
+      [(>= row 6) (check-diagonal board 0 (+ col 1))]
+      [else
+       (define result-desc (check-position-descendent board row col))
+       (define result-asc (check-position-ascending board row col))
+       (cond
+         [(> result-desc 0) result-desc]
+         [(> result-asc 0) result-asc]
+         [else
+          (check-diagonal board (+ row 1) col)])]))
+  
+  (check-diagonal board 0 0))
 
 
 
