@@ -118,15 +118,15 @@
     (if (negative? column-position)
         #f ; si no encuentra 0
         (if (equal? (get-element-at-position column column-position) 0)
-            column-position ; encuentra cero, devuelve posición
-            (aux column (- column-position 1))))) ; continúa la búsqueda
+            column-position ; si encuentra cero, devuelve posición
+            (aux column (- column-position 1)))))
   
-  (aux column (- 6 1))) ; comienza desde la última posición (5) para un tablero de 6 filas
+  (aux column (- 6 1)))
 
 ;actualizar la fila
 (define (update-row current-row column-position piece)
   (cond
-    [(= column-position 0) (cons (first-at-list piece) (rest-at-list current-row))]  ; Aquí usamos first-at-list en vez de piece-get-color
+    [(= column-position 0) (cons (first-at-list piece) (rest-at-list current-row))]
     [else
      (cons (first-at-list current-row)
                 (update-row (rest-at-list current-row) (- column-position 1) piece))]))
@@ -222,11 +222,19 @@
          (board-check-horizontal-win (rest-at-list board)))]))  ; revisa la siguiente fila
 
 ;rf9-otros
+;Descripción: Avanza n posiciones en una lista
+;Dominio: list X number 
+;Recorrido: list 
+;Recursión: Natural
+(define (mylist-tail lst n)
+  (if (= n 0)
+      lst
+      (mylist-tail (rest-at-list lst) (- n 1))))
 
 ;Descripción: get element en simples palabras es si se quiere un elemento en la fila 4 y columna 3 la función obtienendo la columna 3 en su totalidad y luego avanza( se va hacia abajo) 4 posiciones para obtener el elemento con first-at-list
 ;Función para obtener un elemento en específico usando get-column2, tomando como dominio la fila y columna
 (define (get-element board row col)
-  (first-at-list (list-tail (get-column2 board col) row))) ;el uso de list-tail es para ir avanzando "row" (numero de filas) veces la columa , luego con first-at-list obtenemos el primer elemento de esa lista 
+  (first-at-list (mylist-tail (get-column2 board col) row))) ;el uso de mylist-tail es para ir avanzando "row" (numero de filas) veces la columa , luego con first-at-list obtenemos el primer elemento de esa lista 
 ;Verificar si cuatro elementos son iguales y distintos de 0
 (define (check-four-equal? e1 e2 e3 e4)
   (and (not (equal? e1 0))
@@ -281,6 +289,9 @@
           (check-diagonal board (+ row 1) col)])]))
   
   (check-diagonal board 0 0))
+
+
+
 
 
 
