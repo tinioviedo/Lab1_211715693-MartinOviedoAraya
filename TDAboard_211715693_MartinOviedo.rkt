@@ -291,6 +291,20 @@
   (check-diagonal board 0 0))
 
 
+;Descripción: Verifica el estado actual del tablero y entrega el ganador que cumple con la regla 
+;de conectar 4 fichas de cualquier forma (vertical, horizontal o diagonal)
+;Dominio: board
+;Recorrido: int (1 si gana el color rojo, 2 si gana el color amarillo, 0 si no hay ganador)
+(define (board-who-is-winner board)
+  (cond
+    [(> (board-check-vertical-win board) 0) (board-check-vertical-win board)]
+    [(> (board-check-horizontal-win board) 0) (board-check-horizontal-win board)]
+    [(> (board-check-diagonal-win board) 0) (board-check-diagonal-win board)]
+    [else
+     0]))
+
+
+
 
 
 
