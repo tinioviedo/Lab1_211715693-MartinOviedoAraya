@@ -3,7 +3,6 @@
 (provide (all-defined-out))
 
 (require "TDApiece_211715693_MartinOviedo.rkt")
-(require "TDAplayer_211715693_MartinOviedo.rkt")
 
 
 ;Descripcion: Crear una lista para representar el tablero, la lista está compuesta de 6 sublistas (filas) en donde cada una tiene 7 elementos que serían las columnas
@@ -184,16 +183,12 @@
 ;Dominio: board
 ;Recorrido: number (0 si no hay ganador, 1 si gana rojo, 2 si gana amarillo)
 (define (board-check-vertical-win board)
-  (define (check-all-columns column-position)
     (cond
-      [(= column-position 7) 0]  ; revisaron todas las columnas y nadie ganó
-      [else 
-       (define column-winner (column-check-vertical (get-column2 board column-position))) 
-       (if (> column-winner 0) 
-           column-winner  ; ganador
-           (check-all-columns (+ column-position 1)))]))  ; Revisa la sgte columna
-  
-  (check-all-columns 0))
+      [(> (column-check-vertical (get-column2 board 0)) 0)
+       (column-check-vertical (get-column2 board 0))]
+      [(null? (rest-at-list (first-at-list board))) 0]
+      [else
+       (board-check-vertical-win (mymap rest-at-list board))]))
 ;-rf8
 ;Descripción: Verifica si hay 4 fichas consecutivas del mismo color en una fila
 ;Dominio: list (fila)
@@ -302,6 +297,8 @@
     [(> (board-check-diagonal-win board) 0) (board-check-diagonal-win board)]
     [else
      0]))
+
+;-----
 
 
 
