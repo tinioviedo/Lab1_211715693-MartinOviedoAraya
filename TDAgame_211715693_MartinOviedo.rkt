@@ -53,11 +53,36 @@
 ;Recorrido: Board
 (define (game-get-board game)
   (third-at-list game))
-;--------
-;rf17
+;rf 17
 ;Descripción: Función que finaliza el juego actualizando las estadísticas de los jugadores según el resultado
 ;Dominio: game
 ;Recorrido: game
-;(define (game-set-end game)                      
+
+(define (game-set-end game)
+  (cond
+    ;Cuando empatan
+    [(game-is-draw? game)
+     (list
+      (player-update-stats (first-at-list game) "draw")
+      (player-update-stats (second-at-list game) "draw")
+      (third-at-list game)
+      (fourth-at-list game))]
+    
+    ;Cuando gana el rojo
+    [(= (board-who-is-winner (third-at-list game)) 1)
+     (list 
+      (player-update-stats (first-at-list game) "win")
+      (player-update-stats (second-at-list game) "loss")
+      (third-at-list game)
+      (fourth-at-list game))]
+    
+    ;cuando gana el amarillo
+    [(= (board-who-is-winner (third-at-list game)) 2)
+     (list 
+      (player-update-stats (first-at-list game) "loss")
+      (player-update-stats (second-at-list game) "win")
+      (third-at-list game)
+      (fourth-at-list game))]))
+
                     
 
