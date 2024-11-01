@@ -4,11 +4,11 @@
 (require "TDApiece_211715693_MartinOviedo.rkt")
 (require "TDAboard_211715693_MartinOviedo.rkt")
 
-
-;descripcion: Crear una lista llamada Player a partir del Id, name, color, wins, losses, draws, remaining-pieces.
+;--------------Constructor--------------
+;RF O2
+;Descripcion: Crear una lista llamada Player a partir del Id, name, color, wins, losses, draws, remaining-pieces.
 ;Dominio: id (int) X name (string) X color (string) X wins (int) X losses (int) X draws (int) X remaining-pieces (int)
 ;Recorrido : player (list)
-;Constructor
 
 
 (define ( player id name color wins losses draws remaining-pieces)
@@ -29,8 +29,8 @@
       (error "Formato invalido de parametro(s) de player")))
 
 
-
-;rf 14
+;--------------Otros--------------
+;RF 14
 ;Descripción: Función que actualiza las estadísticas del jugador (victorias, derrotas o empates) después de finalizar un juego.
 ;Dominio: player (player) X result (string: "win", "loss", o "draw")
 ;Recorrido: boolean (#t si es empate, #f si no)
