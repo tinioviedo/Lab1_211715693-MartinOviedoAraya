@@ -1,0 +1,48 @@
+Autoevaluación Martín Oviedo Araya
+
+0: No realizado.
+0.25: Implementación con problemas mayores (funciona 25% de las veces o no funciona)
+0.5: Implementación con funcionamiento irregular (funciona 50% de las veces)
+0.75: Implementación con problemas menores (funciona 75% de las veces)
+1: Implementación completa sin problemas (funciona 100% de las veces)
+
+
+
+
+
+RNF
+RNF1. (obligatorio) Autoevaluación                                    1
+RNF2. (obligatorio) Lenguaje                                          1
+RNF3. (obligatorio) Versión                                           1
+RNF4. (obligatorio) Standard                                          1
+RNF5. (obligatorio) No variables                                      1
+RNF6. (1 pts) Documentación                                           1
+RNF7. (obligatorio) Dom->Rec                                          1
+RNF8. (1 pts) Organización                                            1
+RNF9. (2.5 pts) Historial                                             1
+RNF10. (obligatorio) Script de pruebas (pruebas_RUT_Apellidos.rkt)    1 
+
+
+
+
+
+RF01. (0.5 pts TDAs)                                                  1
+RF02. (0.1 pts) TDA Player - constructor.                             1
+RF03. (0.1 pts) TDA Piece - constructor.                              1
+RF04. (0.2 pts) TDA Board - constructor.                              1
+RF05. (0.1 pts) TDA Board - otros - sePuedeJugar?                     1
+RF06. (0.1 pts) TDA Board - modificador - jugar ficha                 1
+RF07. (0.2 pts) TDA Board - otros - verificar victoria vertical       1
+RF08 (0.1 pts) TDA Board - otros - verificar victoria horizontal      1
+RF09. (0.3 pts) TDA Board - otros - verificar victoria diagonal       1
+RF10. (0.1 pts) TDA Board - otros - entregarGanador                   1
+RF11. (0.1 pts) TDA Game - constructor                                1                            
+RF12. (0.1 pts) TDA Game - otros - history                            1 
+RF13. (0.1 pts) TDA Game - otros - esEmpate?                          1 
+RF14. (0.1 pts) TDA Player - otros - actualizarEstadisticas           1
+RF15. (0.1 pts) TDA Game - selector - getCurrentPlayer                1
+RF16. (0.1 pts) TDA Game - selector - board-get-state                 1
+RF17. (0.1 pts) TDA Game - modificador - game-set-end                 1 
+RF18. (3,5 pts) TDA Game - modificador - realizarMovimiento           1
+(BONUS) RF19. (2,5 pts) TDA Game - modificador                        0
+(BONUS) RF20. (1 pts) TDA Game - otros - game-ai-explain-history      0

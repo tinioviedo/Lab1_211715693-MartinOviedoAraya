@@ -2,7 +2,7 @@
 
 (provide (all-defined-out))
 
-(require "TDApiece_211715693_MartinOviedo.rkt")
+(require "TDApiece_21171569_OviedoAraya.rkt")
 
 ;--------------Constructor--------------
 ;RF04
@@ -56,13 +56,15 @@
 ;Descripción: Verifica todas las columnas del tablero buscando una victoria vertical
 ;Dominio: board
 ;Recorrido: number (0 si no hay ganador, 1 si gana rojo, 2 si gana amarillo)
+;Recursión: natural
 (define (board-check-vertical-win board)
     (cond
-      [(> (column-check-vertical (get-column2 board 0)) 0)
-       (column-check-vertical (get-column2 board 0))]
       [(null? (rest-at-list (first-at-list board))) 0]
       [else
-       (board-check-vertical-win (mymap rest-at-list board))]))
+       (define next-colunm-winners (board-check-vertical-win (mymap rest-at-list board)))
+       (if (> next-colunm-winners 0)
+           next-colunm-winners
+           (column-check-vertical (get-column2 board 0)))]))
 
 ;RF08
 

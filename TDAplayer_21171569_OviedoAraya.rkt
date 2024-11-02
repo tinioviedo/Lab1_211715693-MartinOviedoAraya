@@ -1,8 +1,8 @@
 #lang racket
 (provide (all-defined-out))
 
-(require "TDApiece_211715693_MartinOviedo.rkt")
-(require "TDAboard_211715693_MartinOviedo.rkt")
+(require "TDApiece_21171569_OviedoAraya.rkt")
+(require "TDAboard_21171569_OviedoAraya.rkt")
 
 ;--------------Constructor--------------
 ;RF O2

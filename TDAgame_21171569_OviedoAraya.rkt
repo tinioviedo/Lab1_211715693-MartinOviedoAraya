@@ -1,8 +1,8 @@
 #lang racket
 (provide (all-defined-out))
-(require "TDApiece_211715693_MartinOviedo.rkt")
-(require "TDAplayer_211715693_MartinOviedo.rkt")
-(require "TDAboard_211715693_MartinOviedo.rkt")
+(require "TDApiece_21171569_OviedoAraya.rkt")
+(require "TDAplayer_21171569_OviedoAraya.rkt")
+(require "TDAboard_21171569_OviedoAraya.rkt")
 
 ;--------------Constructor--------------
 ;RF11
@@ -17,7 +17,7 @@
            (equal? (third-at-list player1) "red")      ; player1 debe ser rojo
            (equal? (third-at-list player2) "yellow")   ; player2 debe ser amarillo
            (or (= current-turn 1) (= current-turn 2))) ; turno debe ser 1 o 2
-      (list player1 player2 board current-turn)
+      (list player1 player2 board current-turn '())
       (error "Formato invalido de parametro(s) de game")))
 
 ;--------------Selectores--------------
@@ -55,7 +55,8 @@
       (player-update-stats (first-at-list game) "draw")
       (player-update-stats (second-at-list game) "draw")
       (third-at-list game)
-      (fourth-at-list game))]
+      (fourth-at-list game)
+      (game-history game))]
     
     ;Cuando gana el rojo
     [(= (board-who-is-winner (third-at-list game)) 1)
@@ -63,7 +64,8 @@
       (player-update-stats (first-at-list game) "win")
       (player-update-stats (second-at-list game) "loss")
       (third-at-list game)
-      (fourth-at-list game))]
+      (fourth-at-list game)
+      (game-history game))]
     
     ;cuando gana el amarillo
     [(= (board-who-is-winner (third-at-list game)) 2)
@@ -71,7 +73,8 @@
       (player-update-stats (first-at-list game) "loss")
       (player-update-stats (second-at-list game) "win")
       (third-at-list game)
-      (fourth-at-list game))]))
+      (fourth-at-list game)
+      (game-history game))]))
 
 
 
@@ -83,58 +86,70 @@
 ;Recorrido: game
 (define (game-player-set-move current-game player column)
   (if (not (valid-move? current-game player column))
-      (error "Movimiento no valido")
+      (error "Movimiento no válido")
       
-      ;actualizar al jugar si hay ganador o empate, se actualizan estadisticas
-      (if (or (> (board-who-is-winner
-                  (board-set-play-piece
-                   (third-at-list current-game)
-                   column
+      (if (or (> (board-who-is-winner 
+                  (board-set-play-piece 
+                   (third-at-list current-game) 
+                   column 
                    (piece (third-at-list player)))) 0)
               (game-is-draw? current-game))
           
-          ;Actualizar con el game-set-end
-          (game-set-end 
-           (game 
-            ;Actualizar rojo
-            (if (equal? (third-at-list player) "red")
-                (update-player-after-move player)
-                (first-at-list current-game))
-            ;Actualizar amarillo
-            (if (equal? (third-at-list player) "yellow")
-                (update-player-after-move player)
-                (second-at-list current-game))
-            ;Actualizar board
-            (board-set-play-piece 
-             (third-at-list current-game) 
-             column 
-             (piece (third-at-list player)))
-            ;Cambiar turno
-            (if (= (fourth-at-list current-game) 1) 2 1)))  ; si le toca rojo, cambio al amarillo y al reves
-          
-          ;mientras se juege
-          (game 
-           ;Actualizar rojo
+          ;juego terminoó
+          (list 
+           ;actualizo rojo
            (if (equal? (third-at-list player) "red")
                (update-player-after-move player)
                (first-at-list current-game))
-           ;Actualizar amarillo
+           ;actualizo amarillo
            (if (equal? (third-at-list player) "yellow")
                (update-player-after-move player)
                (second-at-list current-game))
-           ;Actualizar board
+           ;actualizo board
            (board-set-play-piece 
             (third-at-list current-game) 
             column 
             (piece (third-at-list player)))
-           ;Cambiar turno
-           (if (= (fourth-at-list current-game) 1) 2 1)))))
-
+           ;actualizo turno
+           (if (= (fourth-at-list current-game) 1) 2 1)
+           ;actualizo historial
+           (cons (list column (third-at-list player))
+                 (game-history current-game)))
+          
+          ;juego sigue
+          (list 
+           ;actualizo rojo
+           (if (equal? (third-at-list player) "red")
+               (update-player-after-move player)
+               (first-at-list current-game))
+           ;actualizo amarillo
+           (if (equal? (third-at-list player) "yellow")
+               (update-player-after-move player)
+               (second-at-list current-game))
+           ;actualizo board
+           (board-set-play-piece 
+            (third-at-list current-game) 
+            column 
+            (piece (third-at-list player)))
+           ;actualizo turno
+           (if (= (fourth-at-list current-game) 1) 2 1)
+           ;actualizo historial
+           (cons (list column (third-at-list player))
+                 (game-history current-game))))))
 
 ;--------------Otros--------------
 
 ;rf12 history
-;-------
+;Permite crear un historial de movimientos
+;Dominio : game
+;Recorrido: game
+(define (game-history game)
+  (cond [(and (list? game) (>= (mylength game) 5) (list? (fifth-at-list game)))
+         (fifth-at-list game)]
+        [else
+         '()]))
+
+
 
 ;rf13
 
@@ -184,7 +199,9 @@
         (fourth-at-list player)     
         (fifth-at-list player)     
         (sixth-at-list player)        
-        (- (last-at-list player) 1))) 
+        (- (last-at-list player) 1)))
+
+
 
 
 
